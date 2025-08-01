@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Café Menü</title>
 
-  <!-- ✒️ Elegante Serifenschrift -->
+  <!-- ✒️ Schriftart -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
@@ -71,43 +71,34 @@
       color: inherit;
     }
 
+    /* 🌙 Kleiner Toggle-Button oben links */
     #modeToggle {
       position: absolute;
       top: 1rem;
-      right: 1rem;
-      background: transparent;
-      border: 2px solid var(--gold);
-      border-radius: 20px;
-      padding: 0.4rem 1rem;
-      font-size: 0.9rem;
+      left: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
       color: var(--gold);
       cursor: pointer;
-      transition: 0.3s;
+      transition: transform 0.3s ease;
     }
 
     #modeToggle:hover {
-      background-color: var(--gold);
-      color: white;
+      transform: scale(1.1);
     }
 
     @media (max-width: 600px) {
       button {
         width: 90%;
       }
-
-      #modeToggle {
-        right: 50%;
-        transform: translateX(50%);
-        top: auto;
-        bottom: 1rem;
-      }
     }
   </style>
 </head>
 <body>
 
-  <!-- 🌙 Dunkelmodus-Schalter -->
-  <button id="modeToggle" onclick="toggleMode()">🌙 Modus wechseln</button>
+  <!-- 🌙 Schalter oben links -->
+  <button id="modeToggle" onclick="toggleMode()" title="Modus wechseln">🌙</button>
 
   <!-- 📌 Logo -->
   <img src="dein-logo.png" alt="Logo" class="logo" />
@@ -124,13 +115,14 @@
   <p id="response"></p>
 
   <!-- 🔚 Footer -->
-  <footer>© 2025 Café – Alle Rechte vorbehalten</footer>
+  <footer>© 2025 Café Mustermann – Alle Rechte vorbehalten</footer>
 
   <!-- ⚙️ Logik -->
   <script>
     const chatId = "DEINE_CHAT_ID";       // 🔁 Ersetze mit deiner Telegram-ID
     const botToken = "DEIN_BOT_TOKEN";    // 🔁 Ersetze mit deinem Bot-Token
     let cooldown = false;
+    let dark = false;
 
     function callWaiter() {
       if (cooldown) {
@@ -160,7 +152,12 @@
     }
 
     function toggleMode() {
-      document.body.classList.toggle("darkmode");
+      const body = document.body;
+      const toggle = document.getElementById("modeToggle");
+
+      dark = !dark;
+      body.classList.toggle("darkmode", dark);
+      toggle.innerText = dark ? "☀️" : "🌙";
     }
   </script>
 </body>
