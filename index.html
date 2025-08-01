@@ -5,30 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Café Menü</title>
 
-  <!-- 🖌️ Schriftart & Stil -->
+  <!-- ✒️ Elegante Serifenschrift -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
-    /* 🌄 Hintergrund mit Marmor-Effekt */
+    :root {
+      --gold: #bfa046;
+      --text: #3e3e3e;
+    }
+
     body {
-      font-family: 'Playfair Display', serif; /* 📌 Elegante Serifenschrift */
-      background-image: url('https://wallpapers.com/images/featured-full/telefonhintergrund-aus-marmor-kyrr58x33k999y2i.jpg'); /* 📌 Weißer Marmor-Hintergrund */
+      font-family: 'Playfair Display', serif;
+      background-image: url('https://i.pinimg.com/736x/6d/3c/2b/6d3c2b62fe8f50e421339fe46b297608.jpg'); /* heller Marmor */
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
-      color: #3e3e3e; /* 📌 Dunkles Grau für Eleganz */
+      color: var(--text);
       text-align: center;
       padding: 2rem;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    body.darkmode {
+      background-image: url('https://i.pinimg.com/736x/42/4f/84/424f84b090dd27725f554de2d292d400.jpg'); /* dunkler Marmor */
+      color: var(--gold);
+    }
+
+    img.logo {
+      width: 100px;
+      margin-bottom: 1rem;
     }
 
     h1 {
       font-size: 2rem;
-      color: #bfa046; /* 📌 Goldene Überschrift */
-      margin-bottom: 1.5rem;
-    }
-
-    p {
-      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
     }
 
     button {
@@ -36,53 +47,108 @@
       margin: 1rem;
       font-size: 1.1rem;
       border-radius: 30px;
-      border: 2px solid #bfa046; /* 📌 Goldene Kontur */
+      border: 2px solid var(--gold);
       background-color: transparent;
-      color: #bfa046;
+      color: var(--gold);
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     button:hover {
-      background-color: #bfa046;
+      background-color: var(--gold);
       color: white;
+      transform: scale(1.03);
     }
 
     #response {
       margin-top: 2rem;
       font-weight: bold;
-      color: #3e3e3e;
+    }
+
+    footer {
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      color: inherit;
+    }
+
+    #modeToggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      color: var(--gold);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #modeToggle:hover {
+      background-color: var(--gold);
+      color: white;
     }
 
     @media (max-width: 600px) {
       button {
         width: 90%;
       }
+
+      #modeToggle {
+        right: 50%;
+        transform: translateX(50%);
+        top: auto;
+        bottom: 1rem;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- 🌙 Dunkelmodus-Schalter -->
+  <button id="modeToggle" onclick="toggleMode()">🌙 Modus wechseln</button>
+
+  <!-- 📌 Logo -->
+  <img src="dein-logo.png" alt="Logo" class="logo" />
+
   <!-- 👋 Begrüßung -->
-  <h1>☕ Willkommen im Café</h1>
-  <p>Bitte wähle eine Option:</p>
+  <h1>Willkommen im Café</h1>
+  <p>Was möchtest du tun?</p>
 
   <!-- 📖 Buttons -->
   <button onclick="window.open('speisekarte.pdf', '_blank')">📖 Speisekarte</button>
-  <button onclick="callWaiter()">🛎️ Kellner rufen</button>
+  <button id="callBtn" onclick="callWaiter()">🛎️ Kellner rufen</button>
   <button onclick="showWifi()">📶 WLAN-Infos</button>
 
   <p id="response"></p>
 
-  <!-- ⚙️ Funktionen -->
+  <!-- 🔚 Footer -->
+  <footer>© 2025 Café – Alle Rechte vorbehalten</footer>
+
+  <!-- ⚙️ Logik -->
   <script>
     const chatId = "DEINE_CHAT_ID";       // 🔁 Ersetze mit deiner Telegram-ID
     const botToken = "DEIN_BOT_TOKEN";    // 🔁 Ersetze mit deinem Bot-Token
+    let cooldown = false;
 
     function callWaiter() {
+      if (cooldown) {
+        document.getElementById("response").innerText = "⏳ Bitte warte, ein Kellner wurde bereits benachrichtigt.";
+        return;
+      }
+
       fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent('🔔 Ein Kellner wird gebraucht.')}`)
         .then(() => {
           document.getElementById("response").innerText = "✅ Ein Kellner wurde benachrichtigt.";
+          cooldown = true;
+          document.getElementById("callBtn").disabled = true;
+
+          setTimeout(() => {
+            cooldown = false;
+            document.getElementById("callBtn").disabled = false;
+            document.getElementById("response").innerText = "";
+          }, 180000); // 3 Minuten Sperre
         })
         .catch(() => {
           document.getElementById("response").innerText = "⚠️ Fehler beim Senden.";
@@ -92,7 +158,10 @@
     function showWifi() {
       alert("📶 WLAN-Name: MeinCafeWLAN\n🔑 Passwort: kaffee123");
     }
+
+    function toggleMode() {
+      document.body.classList.toggle("darkmode");
+    }
   </script>
 </body>
 </html>
-
