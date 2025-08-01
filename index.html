@@ -5,63 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Café Menü</title>
 
-  <!-- 🖌️ Grunddesign: Schrift & Farben (kannst du unten anpassen) -->
+  <!-- 🖌️ Schriftart & Stil -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+
   <style>
+    /* 🌄 Hintergrund mit Marmor-Effekt */
     body {
-      font-family: 'Segoe UI', sans-serif; /* 📌 Schriftart */
-      background-color: #fef6e4;           /* 📌 Hintergrundfarbe */
-      color: #333;                         /* 📌 Textfarbe */
+      font-family: 'Playfair Display', serif; /* 📌 Elegante Serifenschrift */
+      background-image: url('https://i.imgur.com/NurRvXK.jpg'); /* 📌 Weißer Marmor-Hintergrund */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #3e3e3e; /* 📌 Dunkles Grau für Eleganz */
       text-align: center;
       padding: 2rem;
     }
 
     h1 {
       font-size: 2rem;
+      color: #bfa046; /* 📌 Goldene Überschrift */
       margin-bottom: 1.5rem;
+    }
+
+    p {
+      font-size: 1.1rem;
     }
 
     button {
       padding: 1rem 2rem;
       margin: 1rem;
-      font-size: 1.2rem;
-      border-radius: 12px;
-      border: none;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      border: 2px solid #bfa046; /* 📌 Goldene Kontur */
+      background-color: transparent;
+      color: #bfa046;
       cursor: pointer;
-      background-color: #00897b;           /* 📌 Buttonfarbe */
-      color: white;
-      transition: 0.2s;
+      transition: 0.3s ease;
     }
 
     button:hover {
-      background-color: #00695c;           /* 📌 Button-Hover-Farbe */
+      background-color: #bfa046;
+      color: white;
     }
 
     #response {
       margin-top: 2rem;
       font-weight: bold;
+      color: #3e3e3e;
+    }
+
+    @media (max-width: 600px) {
+      button {
+        width: 90%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- 👋 Begrüßung mit Emoji – frei anpassbar -->
+  <!-- 👋 Begrüßung -->
   <h1>☕ Willkommen im Café</h1>
-  <p>Was möchtest du tun?</p>
+  <p>Bitte wähle eine Option:</p>
 
-  <!-- 📖 Buttons: Aktionen auslösen -->
+  <!-- 📖 Buttons -->
   <button onclick="window.open('speisekarte.pdf', '_blank')">📖 Speisekarte</button>
   <button onclick="callWaiter()">🛎️ Kellner rufen</button>
   <button onclick="showWifi()">📶 WLAN-Infos</button>
 
-  <!-- ✅ Rückmeldung nach Klick -->
   <p id="response"></p>
 
-  <!-- ⚙️ Funktionslogik -->
+  <!-- ⚙️ Funktionen -->
   <script>
-    const chatId = "DEINE_CHAT_ID";       // 🔁 Ersetze durch deine Telegram-Chat-ID
-    const botToken = "DEIN_BOT_TOKEN";     // 🔁 Ersetze durch deinen Bot-Token
+    const chatId = "DEINE_CHAT_ID";       // 🔁 Ersetze mit deiner Telegram-ID
+    const botToken = "DEIN_BOT_TOKEN";    // 🔁 Ersetze mit deinem Bot-Token
 
-    // 🛎️ Funktion für "Kellner rufen"
     function callWaiter() {
       fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent('🔔 Ein Kellner wird gebraucht.')}`)
         .then(() => {
@@ -72,10 +89,10 @@
         });
     }
 
-    // 📶 WLAN-Infos anzeigen
     function showWifi() {
       alert("📶 WLAN-Name: MeinCafeWLAN\n🔑 Passwort: kaffee123");
     }
   </script>
 </body>
 </html>
+
