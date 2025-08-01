@@ -72,10 +72,11 @@
     }
 
     /* 🌙 Kleiner Toggle-Button oben links */
-    #modeToggle {
+#modeToggle {
   position: fixed;
   top: 1rem;
-  left: 0.5rem;
+  left: 0;
+  transform: translateX(-50%);
   background: none;
   border: none;
   font-size: 1rem;
@@ -88,7 +89,7 @@
 }
 
 #modeToggle:hover {
-  transform: scale(1.1);
+  transform: translateX(-50%) scale(1.1);
 }
 
     #modeToggle:hover {
