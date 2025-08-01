@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Café Menü</title>
+
+  <!-- 🖌️ Grunddesign: Schrift & Farben (kannst du unten anpassen) -->
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif; /* 📌 Schriftart */
+      background-color: #fef6e4;           /* 📌 Hintergrundfarbe */
+      color: #333;                         /* 📌 Textfarbe */
+      text-align: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    button {
+      padding: 1rem 2rem;
+      margin: 1rem;
+      font-size: 1.2rem;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background-color: #00897b;           /* 📌 Buttonfarbe */
+      color: white;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background-color: #00695c;           /* 📌 Button-Hover-Farbe */
+    }
+
+    #response {
+      margin-top: 2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 👋 Begrüßung mit Emoji – frei anpassbar -->
+  <h1>☕ Willkommen im Café</h1>
+  <p>Was möchtest du tun?</p>
+
+  <!-- 📖 Buttons: Aktionen auslösen -->
+  <button onclick="window.open('speisekarte.pdf', '_blank')">📖 Speisekarte</button>
+  <button onclick="callWaiter()">🛎️ Kellner rufen</button>
+  <button onclick="showWifi()">📶 WLAN-Infos</button>
+
+  <!-- ✅ Rückmeldung nach Klick -->
+  <p id="response"></p>
+
+  <!-- ⚙️ Funktionslogik -->
+  <script>
+    const chatId = "DEINE_CHAT_ID";       // 🔁 Ersetze durch deine Telegram-Chat-ID
+    const botToken = "DEIN_BOT_TOKEN";     // 🔁 Ersetze durch deinen Bot-Token
+
+    // 🛎️ Funktion für "Kellner rufen"
+    function callWaiter() {
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent('🔔 Ein Kellner wird gebraucht.')}`)
+        .then(() => {
+          document.getElementById("response").innerText = "✅ Ein Kellner wurde benachrichtigt.";
+        })
+        .catch(() => {
+          document.getElementById("response").innerText = "⚠️ Fehler beim Senden.";
+        });
+    }
+
+    // 📶 WLAN-Infos anzeigen
+    function showWifi() {
+      alert("📶 WLAN-Name: MeinCafeWLAN\n🔑 Passwort: kaffee123");
+    }
+  </script>
+</body>
+</html>
