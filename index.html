@@ -91,6 +91,20 @@
     button {
       width: 90%;
     }
+    #response {
+    display: none; /* standardmäßig versteckt */
+    margin-top: 2rem;
+    font-weight: bold;
+    color: #2c2c2c;
+    white-space: pre-wrap;
+    background-color: rgba(255,255,255,0.7);
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  #response:not(:empty) {
+    display: inline-block; /* nur sichtbar wenn Text drin ist */
   }
 </style>
 
@@ -109,7 +123,8 @@
   <button id="callBtn" onclick="callWaiter()">🛎️ Kellner rufen</button>
   <button onclick="showWifi()">📶 WLAN-Infos</button>
 
-
+<p id="response"></p>
+  
   <!-- 🔚 Footer -->
   <footer>© 2025 Café Mustermann – Alle Rechte vorbehalten</footer>
 
