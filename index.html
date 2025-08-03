@@ -9,37 +9,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --gold: #bfa046;
-      --text: #3e3e3e;
-    }
-
     body {
       font-family: 'Playfair Display', serif;
-      background-image: url('https://i.pinimg.com/736x/6d/3c/2b/6d3c2b62fe8f50e421339fe46b297608.jpg'); /* heller Marmor */
+      background-image: url('https://i.pinimg.com/736x/6d/3c/2b/6d3c2b62fe8f50e421339fe46b297608.jpg'); /* Weißer Marmor */
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
-      color: var(--text);
+      color: #3e3e3e;
       text-align: center;
       padding: 2rem;
-      transition: background 0.5s ease, color 0.5s ease;
-    }
-
-    body.darkmode {
-      background-image: url('https://i.pinimg.com/736x/42/4f/84/424f84b090dd27725f554de2d292d400.jpg'); /* dunkler Marmor */
-      color: var(--gold);
     }
 
     img.logo {
       width: 100px;
       margin-bottom: 1rem;
+      animation: fadeIn 1.2s ease;
     }
 
     h1 {
       font-size: 2rem;
-      color: var(--gold);
+      color: #bfa046;
       margin-bottom: 1rem;
+      animation: fadeIn 1.4s ease;
     }
 
     button {
@@ -47,15 +38,16 @@
       margin: 1rem;
       font-size: 1.1rem;
       border-radius: 30px;
-      border: 2px solid var(--gold);
+      border: 2px solid #bfa046;
       background-color: transparent;
-      color: var(--gold);
+      color: #bfa046;
       cursor: pointer;
       transition: all 0.3s ease;
+      animation: fadeIn 1.6s ease;
     }
 
     button:hover {
-      background-color: var(--gold);
+      background-color: #bfa046;
       color: white;
       transform: scale(1.03);
     }
@@ -63,37 +55,19 @@
     #response {
       margin-top: 2rem;
       font-weight: bold;
+      color: #3e3e3e;
+      white-space: pre-wrap;
     }
 
     footer {
       margin-top: 4rem;
       font-size: 0.9rem;
-      color: inherit;
+      color: #999;
     }
 
-    /* 🌙 Kleiner Toggle-Button oben links */
-#modeToggle {
-  position: fixed;
-  top: 1rem;
-  left: 0;
-  transform: translateX(-50%);
-  background: none;
-  border: none;
-  font-size: 1rem;
-  color: var(--gold);
-  cursor: pointer;
-  padding: 0;
-  margin: 0;
-  z-index: 1000;
-  transition: transform 0.3s ease;
-}
-
-#modeToggle:hover {
-  transform: translateX(-50%) scale(1.1);
-}
-
-    #modeToggle:hover {
-      transform: scale(1.1);
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 600px) {
@@ -104,9 +78,6 @@
   </style>
 </head>
 <body>
-
-  <!-- 🌙 Schalter oben links -->
-  <button id="modeToggle" onclick="toggleMode()" title="Modus wechseln">🌙</button>
 
   <!-- 📌 Logo -->
   <img src="dein-logo.png" alt="Logo" class="logo" />
@@ -127,45 +98,49 @@
 
   <!-- ⚙️ Logik -->
   <script>
-    const chatId = "DEINE_CHAT_ID";       // 🔁 Ersetze mit deiner Telegram-ID
-    const botToken = "DEIN_BOT_TOKEN";    // 🔁 Ersetze mit deinem Bot-Token
+    const chatId = "DEINE_CHAT_ID"; // <-- ersetzen
+    const botToken = "DEIN_BOT_TOKEN"; // <-- ersetzen
     let cooldown = false;
-    let dark = false;
+    let cooldownTime = 180; // 3 Minuten
+    let interval;
 
     function callWaiter() {
-      if (cooldown) {
-        document.getElementById("response").innerText = "⏳ Bitte warte, ein Kellner wurde bereits benachrichtigt.";
-        return;
-      }
+      if (cooldown) return;
 
       fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent('🔔 Ein Kellner wird gebraucht.')}`)
         .then(() => {
-          document.getElementById("response").innerText = "✅ Ein Kellner wurde benachrichtigt.";
+          document.getElementById("response").innerText = "✅ Ein Kellner wurde benachrichtigt und ist in Kürze bei dir.";
           cooldown = true;
           document.getElementById("callBtn").disabled = true;
 
-          setTimeout(() => {
-            cooldown = false;
-            document.getElementById("callBtn").disabled = false;
-            document.getElementById("response").innerText = "";
-          }, 180000); // 3 Minuten Sperre
+          let timeLeft = cooldownTime;
+          updateTimerDisplay(timeLeft);
+          interval = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay(timeLeft);
+            if (timeLeft <= 0) {
+              clearInterval(interval);
+              cooldown = false;
+              document.getElementById("callBtn").disabled = false;
+              document.getElementById("response").innerText = "";
+            }
+          }, 1000);
         })
         .catch(() => {
           document.getElementById("response").innerText = "⚠️ Fehler beim Senden.";
         });
     }
 
-    function showWifi() {
-      alert("📶 WLAN-Name: MeinCafeWLAN\n🔑 Passwort: kaffee123");
+    function updateTimerDisplay(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      const timeString = `${minutes}:${secs.toString().padStart(2, '0')}`;
+      document.getElementById("response").innerText =
+        `⏳ Ein Kellner wurde bereits benachrichtigt und ist in Kürze bei dir.\nDu kannst in ${timeString} erneut rufen.`;
     }
 
-    function toggleMode() {
-      const body = document.body;
-      const toggle = document.getElementById("modeToggle");
-
-      dark = !dark;
-      body.classList.toggle("darkmode", dark);
-      toggle.innerText = dark ? "☀️" : "🌙";
+    function showWifi() {
+      alert("📶 WLAN-Name: MeinCafeWLAN\n🔑 Passwort: kaffee123");
     }
   </script>
 </body>
